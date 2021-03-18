@@ -7,12 +7,11 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
-var gamestate = "on sling";
-
-
+var score = 0;
+var gameState = "onSling";
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+  getbg();
 }
 
 function setup(){
@@ -46,7 +45,18 @@ function setup(){
 }
 
 function draw(){
-    background(backgroundImg);
+    if(backgroundImg){
+        background(backgroundImg);
+    }
+    else{
+        background(255);
+    }
+    noStroke();
+    textSize(35);
+    fill("red");
+    text("score: "+score,width-300,50);
+    
+  
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -67,24 +77,41 @@ function draw(){
     bird.display();
     platform.display();
     //log6.display();
-    slingshot.display();    
+    slingshot.display(); 
+    pig1.score();
+    pig3.score();
+    
+
 }
 
 function mouseDragged(){
-    if(gamestate!== "launch"){
+    if (gameState!=="launched"){
         Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
     }
-  
 }
 
 
 function mouseReleased(){
     slingshot.fly();
-    gamestate = "launch";
+    gameState = "launched";
 }
 
 function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
     }
+}
+async function getbg(){
+    var response = await fetch("https://worldtimeapi.org/api/timezone/Asia/Tokyo");
+    var responsejson = await response.json();
+    var dt = responsejson.datetime;
+    var hour = dt.slice(11,13);
+    if(hour>=06 && hour<=19){
+        bg = "sprites/bg.png";
+    
+    }
+    else{
+        bg = "sprites/bg2.jpg";
+    }
+    backgroundImg = loadImage(bg);
 }
