@@ -24,6 +24,9 @@ score(){
   if(this.Visiblity<0 && this.Visiblity>-1005){
       score += 5;
   }
+  if(this.Visiblity<0 && this.Visiblity>-50){
+    snort.play();
+  }
 }
 
 
